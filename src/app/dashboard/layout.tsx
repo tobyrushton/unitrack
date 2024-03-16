@@ -12,8 +12,10 @@ const DashboardLayout: FC<{ children: ReactNode }> = async ({ children }) => {
 
     return (
         <main className="absolute w-full h-full bg-white dark:bg-black dark:text-white">
-            <Navbar />
-            {children}
+            <div className="flex flex-column h-full">
+                <Navbar />
+                {children}
+            </div>
         </main>
     )
 }
