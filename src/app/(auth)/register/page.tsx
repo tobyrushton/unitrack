@@ -16,7 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { registerUser } from './action'
 
-export const formSchema = z.object({
+const formSchema = z.object({
     email: z.string().email({ message: 'Please enter a valid email' }),
     firstName: z.string().min(1, { message: 'Please enter your name' }),
     lastName: z.string().min(1, { message: 'Please enter your last name' }),
