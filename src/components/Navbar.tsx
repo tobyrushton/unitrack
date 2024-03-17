@@ -6,7 +6,7 @@ import { NavLink } from './NavLink'
 export const Navbar: FC = () => {
     return (
         <>
-            <nav className="flex flex-col items-center p-2 gap-2">
+            <nav className="flex flex-col items-center p-2 gap-2 w-36">
                 <div className="flex flex-col grow gap-3 pl-2">
                     <NavLink href="/dashboard">Overview</NavLink>
                     <NavLink href="/dashboard/calendar">Calendar</NavLink>
