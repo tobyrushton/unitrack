@@ -24,7 +24,7 @@ const PopUpContext = createContext<PopUpContextProps>({
     disable: () => {},
 })
 
-const usePopUp = (): PopUpContextProps => useContext(PopUpContext)
+export const usePopUp = (): PopUpContextProps => useContext(PopUpContext)
 
 interface PopUpTriggerProps extends ChildrenProps {
     text: string

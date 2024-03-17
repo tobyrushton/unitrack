@@ -6,7 +6,7 @@ import { validateRequest } from '@/server/auth/validateRequest'
 interface NewModule {
     name: string
     code: string
-    weight: string
+    credits: string
 }
 
 export const createModule = async (
@@ -21,7 +21,7 @@ export const createModule = async (
         data: {
             name: data.name,
             code: data.code,
-            weight: parseInt(data.weight, 10),
+            credits: parseInt(data.credits, 10),
             userId: user.id,
         },
     })

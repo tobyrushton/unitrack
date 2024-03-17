@@ -15,7 +15,7 @@ import {
     FormLabel,
 } from './ui/form'
 import { Input } from './ui/input'
-import { PopUpFormButtons, PopUp } from './PopUp'
+import { PopUpFormButtons, PopUp, usePopUp } from './PopUp'
 
 const formSchema = z.object({
     name: z
@@ -26,17 +26,18 @@ const formSchema = z.object({
         .string()
         .min(1, { message: 'Code must be atleast 1 characters' })
         .max(16, { message: 'Code can be max 48 characters' }),
-    weight: z.string().refine(
+    credits: z.string().refine(
         value => {
             const val = parseInt(value, 10)
-            return val >= 0 && val <= 100
+            return val > 0
         },
-        { message: 'Weight must be between 0 and 100' }
+        { message: 'Credits must be above 0' }
     ),
 })
 
 export const NewModule: FC = () => {
     const [isPending, startTransition] = useTransition()
+    const { disable } = usePopUp()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -51,7 +52,7 @@ export const NewModule: FC = () => {
                         type: 'server',
                         message: res.error,
                     })
-                }
+                } else disable()
             } catch {
                 form.setError('root', {
                     type: 'server',
@@ -105,14 +106,14 @@ export const NewModule: FC = () => {
                         />
                         <FormField
                             control={form.control}
-                            name="weight"
+                            name="credits"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Module Weight</FormLabel>
+                                    <FormLabel>Module Credits</FormLabel>
                                     <FormControl>
                                         <Input
                                             type="number"
-                                            placeholder="Scale of 0-100"
+                                            placeholder="Number of credits module is worth"
                                             {...field}
                                         />
                                     </FormControl>

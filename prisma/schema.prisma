@@ -44,7 +44,8 @@ model Module {
   id            String         @id @default(uuid())
   name          String
   code          String
-  weight        Int
+  credits       Int
+  grade         Int?
   userId        String
   user          User           @relation(fields: [userId], references: [id])
   assessments   Assessment[]
