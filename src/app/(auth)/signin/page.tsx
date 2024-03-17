@@ -1,7 +1,13 @@
 'use client'
 
 import { FC, useTransition } from 'react'
-import { CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import Link from 'next/link'
+import {
+    CardHeader,
+    CardTitle,
+    CardContent,
+    CardFooter,
+} from '@/components/ui/card'
 import { ButtonWithLoading } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -34,12 +40,18 @@ const SignInPage: FC = () => {
 
     const onSubmit = form.handleSubmit(async data => {
         startTransition(async () => {
-            signUserIn(data)
+            const res = await signUserIn(data)
+            if (res) {
+                form.setError('root', {
+                    type: 'server',
+                    message: res.error,
+                })
+            }
         })
     })
 
     return (
-        <div>
+        <>
             <CardHeader>
                 <CardTitle>Sign In</CardTitle>
             </CardHeader>
@@ -77,6 +89,7 @@ const SignInPage: FC = () => {
                                 </FormItem>
                             )}
                         />
+                        <FormField name="root" render={() => <FormMessage />} />
                         <ButtonWithLoading
                             className="w-full"
                             type="submit"
@@ -87,7 +100,15 @@ const SignInPage: FC = () => {
                     </form>
                 </Form>
             </CardContent>
-        </div>
+            <CardFooter className="flex justify-center">
+                <p>
+                    Don&apos;t have an account?{' '}
+                    <Link className="text-blue-500" href="/register">
+                        Register
+                    </Link>
+                </p>
+            </CardFooter>
+        </>
     )
 }
 

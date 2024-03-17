@@ -1,7 +1,13 @@
 'use client'
 
 import { FC, useTransition } from 'react'
-import { CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import Link from 'next/link'
+import {
+    CardHeader,
+    CardTitle,
+    CardContent,
+    CardFooter,
+} from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import {
     Form,
@@ -40,8 +46,15 @@ const RegisterPage: FC = () => {
     })
 
     const onSubmit = form.handleSubmit(async data => {
-        startTransition(() => {
-            registerUser(data)
+        startTransition(async () => {
+            try {
+                await registerUser(data)
+            } catch (err) {
+                form.setError('root', {
+                    type: 'server',
+                    message: (err as Error).message,
+                })
+            }
         })
     })
 
@@ -110,6 +123,7 @@ const RegisterPage: FC = () => {
                                 </FormItem>
                             )}
                         />
+                        <FormField name="root" render={() => <FormMessage />} />
                         <ButtonWithLoading
                             className="w-full"
                             loading={isPending}
@@ -120,6 +134,14 @@ const RegisterPage: FC = () => {
                     </form>
                 </Form>
             </CardContent>
+            <CardFooter className="flex justify-center">
+                <p>
+                    Already have an account?{' '}
+                    <Link className="text-blue-500" href="/signin">
+                        Sign In
+                    </Link>
+                </p>
+            </CardFooter>
         </>
     )
 }
