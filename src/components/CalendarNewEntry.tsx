@@ -6,8 +6,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import dayjs from 'dayjs'
 import { createCalendarEntry } from '@/app/dashboard/calendar/action'
-import { Card, CardHeader, CardTitle, CardContent } from './ui/card'
-import { Button, ButtonWithLoading } from './ui/button'
+import { CardHeader, CardTitle, CardContent } from './ui/card'
 import {
     Form,
     FormControl,
@@ -19,10 +18,7 @@ import {
 import { Select, SelectTrigger, SelectValue, SelectContent } from './ui/select'
 import { Textarea } from './ui/textarea'
 import { Input } from './ui/input'
-
-interface CalendarNewEntryProps {
-    onClick: () => void
-}
+import { PopUpFormButtons, PopUp } from './PopUp'
 
 const formSchema = z
     .object({
@@ -50,7 +46,7 @@ const formSchema = z
             })
     })
 
-export const CalendarNewEntry: FC<CalendarNewEntryProps> = ({ onClick }) => {
+export const CalendarNewEntry: FC = () => {
     const [isPending, startTransition] = useTransition()
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -71,149 +67,117 @@ export const CalendarNewEntry: FC<CalendarNewEntryProps> = ({ onClick }) => {
     })
 
     return (
-        <div className="absolute flex z-2 h-full w-[calc(100%-10rem)]">
-            <div className="flex grow items-center justify-center h-full">
-                <Card className="w-96">
-                    <CardHeader>
-                        <CardTitle>New Entry</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <Form {...form}>
-                            <form className="space-y-4" onSubmit={onSubmit}>
-                                <FormField
-                                    control={form.control}
-                                    name="title"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Title</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="text"
-                                                    placeholder="Title"
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <div className="grid grid-cols-4 gap-1">
-                                    <FormField
-                                        control={form.control}
-                                        name="date"
-                                        render={({ field }) => (
-                                            <FormItem className="col-span-2">
-                                                <FormLabel>Date</FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        type="date"
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={form.control}
-                                        name="start"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Start</FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        type="time"
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={form.control}
-                                        name="end"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>End</FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        type="time"
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                </div>
-                                <FormField
-                                    control={form.control}
-                                    name="description"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Description</FormLabel>
-                                            <FormControl>
-                                                <Textarea
-                                                    placeholder="Description"
-                                                    className="resize-none"
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="assignmentId"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Assignment</FormLabel>
-                                            <Select
-                                                name={field.name}
-                                                onValueChange={field.onChange}
-                                                defaultValue={field.value}
-                                            >
-                                                <FormControl>
-                                                    <SelectTrigger>
-                                                        <SelectValue placeholder="Select a verified email to display" />
-                                                    </SelectTrigger>
-                                                </FormControl>
-                                                <SelectContent>
-                                                    {/* TODO: Implement fetch for assignments */}
-                                                </SelectContent>
-                                            </Select>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <div className="flex gap-2">
-                                    <Button
-                                        className="flex grow"
-                                        onClick={onClick}
-                                        variant="outline"
+        <PopUp>
+            <CardHeader>
+                <CardTitle>New Entry</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <Form {...form}>
+                    <form className="space-y-4" onSubmit={onSubmit}>
+                        <FormField
+                            control={form.control}
+                            name="title"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Title</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="text"
+                                            placeholder="Title"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <div className="grid grid-cols-4 gap-1">
+                            <FormField
+                                control={form.control}
+                                name="date"
+                                render={({ field }) => (
+                                    <FormItem className="col-span-2">
+                                        <FormLabel>Date</FormLabel>
+                                        <FormControl>
+                                            <Input type="date" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="start"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Start</FormLabel>
+                                        <FormControl>
+                                            <Input type="time" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="end"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>End</FormLabel>
+                                        <FormControl>
+                                            <Input type="time" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                        <FormField
+                            control={form.control}
+                            name="description"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Description</FormLabel>
+                                    <FormControl>
+                                        <Textarea
+                                            placeholder="Description"
+                                            className="resize-none"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="assignmentId"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Assignment</FormLabel>
+                                    <Select
+                                        name={field.name}
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
                                     >
-                                        Close
-                                    </Button>
-                                    <ButtonWithLoading
-                                        className="flex grow"
-                                        type="submit"
-                                        loading={isPending}
-                                    >
-                                        Save
-                                    </ButtonWithLoading>
-                                </div>
-                                <FormMessage />
-                                <FormField
-                                    name="root"
-                                    render={() => <FormMessage />}
-                                />
-                            </form>
-                        </Form>
-                    </CardContent>
-                </Card>
-            </div>
-        </div>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select a verified email to display" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {/* TODO: Implement fetch for assignments */}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <PopUpFormButtons loading={isPending} />
+                        <FormField name="root" render={() => <FormMessage />} />
+                    </form>
+                </Form>
+            </CardContent>
+        </PopUp>
     )
 }
