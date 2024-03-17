@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import dayjs from 'dayjs'
+import { createCalendarEntry } from '@/app/dashboard/calendar/action'
 import { Card, CardHeader, CardTitle, CardContent } from './ui/card'
 import { Button, ButtonWithLoading } from './ui/button'
 import {
@@ -58,8 +59,14 @@ export const CalendarNewEntry: FC<CalendarNewEntryProps> = ({ onClick }) => {
 
     const onSubmit = form.handleSubmit(async data => {
         startTransition(async () => {
-            // TODO: create new entry action
-            console.log('data', data)
+            try {
+                await createCalendarEntry(data)
+            } catch {
+                form.setError('root', {
+                    type: 'server',
+                    message: 'Unable to create entry.',
+                })
+            }
         })
     })
 
@@ -197,6 +204,11 @@ export const CalendarNewEntry: FC<CalendarNewEntryProps> = ({ onClick }) => {
                                         Save
                                     </ButtonWithLoading>
                                 </div>
+                                <FormMessage />
+                                <FormField
+                                    name="root"
+                                    render={() => <FormMessage />}
+                                />
                             </form>
                         </Form>
                     </CardContent>

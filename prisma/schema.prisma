@@ -9,12 +9,14 @@ datasource db {
 }
 
 model User {
-  id             String    @id @default(uuid())
-  email          String    @unique
+  id             String         @id @default(uuid())
+  email          String         @unique
   firstName      String
   lastName       String
   hashedPassword String
   sessions       Session[]
+  calendarItems  CalendarItem[]
+  modules        Module[]
 }
 
 model Session {
@@ -22,4 +24,39 @@ model Session {
   userId    String
   expiresAt DateTime
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model CalendarItem {
+  id           String      @id @default(uuid())
+  title        String
+  start        DateTime
+  end          DateTime
+  description  String?
+  userId       String
+  moduleId     String
+  assessmentId String?
+  user         User        @relation(fields: [userId], references: [id])
+  module       Module      @relation(fields: [moduleId], references: [id])
+  assessment   Assessment? @relation(fields: [assessmentId], references: [id])
+}
+
+model Module {
+  id            String         @id @default(uuid())
+  name          String
+  code          String
+  weight        Int
+  userId        String
+  user          User           @relation(fields: [userId], references: [id])
+  assessments   Assessment[]
+  calendarItems CalendarItem[]
+}
+
+model Assessment {
+  id            String         @id @default(uuid())
+  name          String
+  weight        Int
+  moduleId      String
+  userId        String
+  module        Module         @relation(fields: [moduleId], references: [id])
+  CalendarItems CalendarItem[]
 }
