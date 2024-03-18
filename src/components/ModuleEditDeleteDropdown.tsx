@@ -4,6 +4,7 @@ import { FC, useState } from 'react'
 import { MoreEditDeleteDropdown } from './Dropdown'
 import { PopUpTrigger } from './PopUp'
 import { NewModule } from './NewModule'
+import { DeletePopUp } from './DeletePopUp'
 
 interface ModuleEditDeleteDropdownProps {
     module: {
@@ -14,19 +15,32 @@ interface ModuleEditDeleteDropdownProps {
     }
 }
 
+interface DisplayState {
+    edit: boolean
+    delete: boolean
+}
+
 export const ModuleEditDeleteDropdown: FC<ModuleEditDeleteDropdownProps> = ({
     module,
 }) => {
-    const [display, setDisplay] = useState<boolean>(false)
+    const [display, setDisplay] = useState<DisplayState>({
+        edit: false,
+        delete: false,
+    })
 
     return (
         <>
             <MoreEditDeleteDropdown
-                onEdit={() => setDisplay(true)}
-                onDelete={() => {}}
+                onEdit={() => setDisplay({ edit: true, delete: false })}
+                onDelete={() => setDisplay({ edit: false, delete: true })}
             />
-            <PopUpTrigger disable={() => setDisplay(false)}>
-                {display && <NewModule module={module} />}
+            <PopUpTrigger
+                disable={() => setDisplay({ edit: false, delete: false })}
+            >
+                {display.edit && <NewModule module={module} />}
+                {display.delete && (
+                    <DeletePopUp id={module.id} model="module" />
+                )}
             </PopUpTrigger>
         </>
     )

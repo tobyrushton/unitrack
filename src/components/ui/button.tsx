@@ -57,20 +57,35 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 )
 Button.displayName = 'Button'
 
-const ButtonWithLoading: React.FC<{
+interface ButtonWithLoadingProps extends ButtonProps {
     loading: boolean
-    className?: string
-    children: React.ReactNode
-    type?: 'button' | 'submit' | 'reset'
-}> = ({ loading, className, children, type }) => (
+}
+
+const ButtonWithLoading: React.FC<ButtonWithLoadingProps> = ({
+    loading,
+    className,
+    children,
+    variant,
+    size,
+    ...props
+}) => (
     <>
         {loading ? (
-            <Button disabled className={className} type={type}>
+            <Button
+                disabled
+                className={cn(buttonVariants({ variant, size, className }))}
+                {...props}
+            >
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Please wait
             </Button>
         ) : (
-            <Button className={className}>{children}</Button>
+            <Button
+                className={cn(buttonVariants({ variant, size, className }))}
+                {...props}
+            >
+                {children}
+            </Button>
         )}
     </>
 )
