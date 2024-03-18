@@ -8,4 +8,3 @@ $DIR/wait-for-it.sh "${DATABASE_URL}" -- echo '🟢 - Database is ready!'
 npx prisma db push
 npm run build
 npm run start & npm run cy:run
-killall node

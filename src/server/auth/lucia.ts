@@ -10,8 +10,8 @@ export const lucia = new Lucia(adapter, {
     },
 })
 
-declare module 'Lucia' {
-    interface Register {
+declare module 'lucia' {
+    export interface Register {
         Lucia: typeof lucia
     }
 }

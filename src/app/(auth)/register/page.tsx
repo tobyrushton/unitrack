@@ -116,6 +116,7 @@ const RegisterPage: FC = () => {
                                     <FormControl>
                                         <Input
                                             placeholder="Password"
+                                            type="password"
                                             {...field}
                                         />
                                     </FormControl>
