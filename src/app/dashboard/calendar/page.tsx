@@ -2,7 +2,7 @@ import { Calendar } from '@/components/Calendar'
 import { FC } from 'react'
 import { CalendarNewEntry } from '@/components/CalendarNewEntry'
 import { Page } from '@/components/Page'
-import { PopUpTrigger } from '@/components/PopUp'
+import { PopUpTriggerButton } from '@/components/PopUp'
 
 interface CalendarPageProps {
     searchParams: {
@@ -16,9 +16,9 @@ const CalendarPage: FC<CalendarPageProps> = ({
     return (
         <Page>
             <Calendar className="grow" weekBegin={week_begin} />
-            <PopUpTrigger text="New Entry">
+            <PopUpTriggerButton text="New Entry">
                 <CalendarNewEntry />
-            </PopUpTrigger>
+            </PopUpTriggerButton>
         </Page>
     )
 }

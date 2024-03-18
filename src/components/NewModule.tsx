@@ -4,7 +4,7 @@ import { FC, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { createModule } from '@/app/dashboard/modules/action'
+import { createModule, updateModule } from '@/app/dashboard/modules/action'
 import { CardHeader, CardTitle, CardContent } from './ui/card'
 import {
     Form,
@@ -35,18 +35,33 @@ const formSchema = z.object({
     ),
 })
 
-export const NewModule: FC = () => {
+interface NewModuleProps {
+    module?: {
+        id: string
+        name: string
+        code: string
+        credits: number
+    }
+}
+
+export const NewModule: FC<NewModuleProps> = ({ module }) => {
     const [isPending, startTransition] = useTransition()
     const { disable } = usePopUp()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
+        defaultValues: {
+            ...module,
+            credits: module?.credits.toString() ?? '',
+        },
     })
 
     const onSubmit = form.handleSubmit(async data => {
         startTransition(async () => {
             try {
-                const res = await createModule(data)
+                const res = module
+                    ? await updateModule({ ...data, id: module.id })
+                    : await createModule(data)
                 if (res) {
                     form.setError('root', {
                         type: 'server',

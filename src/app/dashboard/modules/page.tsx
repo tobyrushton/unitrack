@@ -9,7 +9,7 @@ import {
     Page,
 } from '@/components/Page'
 import { Metadata } from 'next'
-import { PopUpTrigger } from '@/components/PopUp'
+import { PopUpTriggerButton } from '@/components/PopUp'
 import { NewModule } from '@/components/NewModule'
 import {
     List,
@@ -17,6 +17,7 @@ import {
     ListItemHeader,
     ListItemDescription,
 } from '@/components/List'
+import { ModuleEditDeleteDropdown } from '@/components/ModuleEditDeleteDropdown'
 import { serverClient } from '@/app/_trpc/server'
 
 export const metadata: Metadata = {
@@ -41,21 +42,24 @@ const ModulesPage: FC = async () => {
                     className="pt-4"
                     items={modules}
                     render={module => (
-                        <ListItem>
-                            <ListItemHeader>
-                                {module.code}: {module.name}
-                            </ListItemHeader>
-                            <ListItemDescription>
-                                Credits: {module.credits} | Grade:{' '}
-                                {module.grade ?? 'N/A'}
-                            </ListItemDescription>
+                        <ListItem className="flex flex-row">
+                            <span className="flex flex-col grow gap-1">
+                                <ListItemHeader>
+                                    {module.code}: {module.name}
+                                </ListItemHeader>
+                                <ListItemDescription>
+                                    Credits: {module.credits} | Grade:{' '}
+                                    {module.grade ?? 'N/A'}
+                                </ListItemDescription>
+                            </span>
+                            <ModuleEditDeleteDropdown module={module} />
                         </ListItem>
                     )}
                 />
             </PageBody>
-            <PopUpTrigger text="New Module">
+            <PopUpTriggerButton text="New Module">
                 <NewModule />
-            </PopUpTrigger>
+            </PopUpTriggerButton>
         </Page>
     )
 }

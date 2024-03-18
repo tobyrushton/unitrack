@@ -27,19 +27,31 @@ const PopUpContext = createContext<PopUpContextProps>({
 export const usePopUp = (): PopUpContextProps => useContext(PopUpContext)
 
 interface PopUpTriggerProps extends ChildrenProps {
-    text: string
+    disable: () => void
 }
 
-export const PopUpTrigger: FC<PopUpTriggerProps> = ({ children, text }) => {
-    const [display, setDisplay] = useState<boolean>(false)
-
-    const providerValue = useMemo(
-        () => ({ disable: () => setDisplay(false) }),
-        [setDisplay]
-    )
+export const PopUpTrigger: FC<PopUpTriggerProps> = ({ children, disable }) => {
+    const providerValue = useMemo(() => ({ disable }), [disable])
 
     return (
         <PopUpContext.Provider value={providerValue}>
+            {children}
+        </PopUpContext.Provider>
+    )
+}
+
+interface PopUpTriggerButtonProps extends ChildrenProps {
+    text: string
+}
+
+export const PopUpTriggerButton: FC<PopUpTriggerButtonProps> = ({
+    children,
+    text,
+}) => {
+    const [display, setDisplay] = useState<boolean>(false)
+
+    return (
+        <PopUpTrigger disable={() => setDisplay(false)}>
             <div className="flex p-2 w-full">
                 <Button
                     className="flex gap-3 w-full"
@@ -51,7 +63,7 @@ export const PopUpTrigger: FC<PopUpTriggerProps> = ({ children, text }) => {
                 </Button>
             </div>
             <>{display && children}</>
-        </PopUpContext.Provider>
+        </PopUpTrigger>
     )
 }
 
@@ -79,7 +91,7 @@ export const PopUpFormButtons: FC<PopUpFormButtonsProps> = ({ loading }) => {
 }
 
 export const PopUp: FC<ChildrenProps> = ({ children }) => (
-    <div className="absolute flex z-2 h-full w-[calc(100%-10rem)]">
+    <div className="absolute flex z-2 h-full w-full top-0 left-0 bg-black/80">
         <div className="flex grow items-center justify-center h-full">
             <Card className="w-96">{children}</Card>
         </div>
