@@ -35,7 +35,7 @@ model CalendarItem {
   userId       String
   moduleId     String
   assessmentId String?
-  user         User        @relation(fields: [userId], references: [id])
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   module       Module      @relation(fields: [moduleId], references: [id])
   assessment   Assessment? @relation(fields: [assessmentId], references: [id])
 }
@@ -47,7 +47,7 @@ model Module {
   credits       Int
   grade         Int?
   userId        String
-  user          User           @relation(fields: [userId], references: [id])
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   assessments   Assessment[]
   calendarItems CalendarItem[]
 }
@@ -58,6 +58,6 @@ model Assessment {
   weight        Int
   moduleId      String
   userId        String
-  module        Module         @relation(fields: [moduleId], references: [id])
+  module        Module         @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   CalendarItems CalendarItem[]
 }
