@@ -23,7 +23,7 @@ import { z } from 'zod'
 import { signUserIn } from './action'
 
 const formSchema = z.object({
-    email: z.string().email({ message: 'Please enter a valid email' }),
+    email: z.string().email(),
     password: z.string(),
 })
 
