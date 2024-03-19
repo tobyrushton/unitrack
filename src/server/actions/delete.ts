@@ -4,7 +4,7 @@ import type { Prisma } from '@prisma/client'
 import { client } from '../db/client'
 import { validateRequest } from '../auth/validateRequest'
 
-type Model = 'calendarItem' | 'module' | 'user' | 'assessment'
+type Model = 'calendarItem' | 'module' | 'assessment'
 
 export interface DeleteRequest {
     id: string
