@@ -17,6 +17,7 @@ model User {
   sessions       Session[]
   calendarItems  CalendarItem[]
   modules        Module[]
+  assessments    Assessment[]
 }
 
 model Session {
@@ -58,6 +59,9 @@ model Assessment {
   weight        Int
   moduleId      String
   userId        String
+  date          DateTime
+  grade         Int?
   module        Module         @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   CalendarItems CalendarItem[]
 }

@@ -28,3 +28,24 @@ export const modules = [
         credits: 20,
     },
 ]
+
+export const assessments = [
+    {
+        name: 'Test Assessment',
+        weight: 10,
+        grade: 80,
+        date: new Date(),
+    },
+    {
+        name: 'Test Assessment 2',
+        weight: 20,
+        grade: 90,
+        date: new Date(),
+    },
+    {
+        name: 'Test Assessment 3',
+        weight: 30,
+        grade: 70,
+        date: new Date(),
+    },
+]

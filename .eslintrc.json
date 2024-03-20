@@ -24,6 +24,7 @@
 "plugins": ["react", "@typescript-eslint", "react-hooks"],
 "rules": {
     "react/jsx-props-no-spreading": "off",
+    "no-undef": "off",
     "camelcase": "off",
     "jsx-a11y/click-events-have-key-events": "off",
     "react/jsx-no-useless-fragment": [
