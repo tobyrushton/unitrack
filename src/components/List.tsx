@@ -6,7 +6,7 @@ interface Id {
     id: string
 }
 
-interface ListProps<T extends Id> {
+export interface ListProps<T extends Id> {
     items: T[]
     render: (item: T) => ReactNode
     className?: string
