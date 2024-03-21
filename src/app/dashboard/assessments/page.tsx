@@ -9,8 +9,9 @@ import {
     PageBody,
 } from '@/components/Page'
 import { serverClient } from '@/app/_trpc/server'
+import { PopUpTriggerButton } from '@/components/PopUp'
+import { NewAssessment } from '@/components/NewAssessment'
 import { AssessmentsList } from './AssessmentsList'
-// import { PopUpTriggerButton } from '@/components/PopUp'
 
 const AssessmentsPage: FC = async () => {
     const assessments = await serverClient.getAssessments()
@@ -27,7 +28,9 @@ const AssessmentsPage: FC = async () => {
                 </PageDescription>
                 <AssessmentsList assessments={assessments} />
             </PageBody>
-            {/* <PopUpTriggerButton text="New Assessment" /> */}
+            <PopUpTriggerButton text="New Assessment">
+                <NewAssessment />
+            </PopUpTriggerButton>
         </Page>
     )
 }
