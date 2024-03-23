@@ -4,6 +4,7 @@ import { FC, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { createAssessment } from '@/app/dashboard/assessments/action'
 import {
     Form,
     FormControl,
@@ -35,7 +36,18 @@ export const NewAssessment: FC = () => {
     const onSubmit = form.handleSubmit(data => {
         startTransition(async () => {
             // TODO: Implement action
-            console.log(data)
+            const res = await createAssessment({
+                ...data,
+                date: new Date(data.date),
+                grade: data.grade ?? null,
+            })
+
+            if (res) {
+                form.setError('root', {
+                    type: 'manual',
+                    message: res.error,
+                })
+            } else disable()
         })
     })
 
@@ -139,6 +151,7 @@ export const NewAssessment: FC = () => {
                             )}
                         />
                         <PopUpFormButtons loading={isPending} />
+                        <FormField name="root" render={() => <FormMessage />} />
                     </form>
                 </Form>
             </CardContent>

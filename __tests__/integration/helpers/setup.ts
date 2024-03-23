@@ -14,5 +14,7 @@ vi.mock('next/navigation', () => ({
 
 beforeEach(async () => {
     await client.user.deleteMany()
-    global.crypto = crypto as Crypto
+    if (process.env.GITHUB_ACTIONS) {
+        global.crypto = crypto as Crypto
+    }
 })

@@ -116,6 +116,7 @@ describe('deleteAction', () => {
                 weight: 10,
                 moduleId: '123',
                 userId: '123',
+                date: new Date(),
             },
         })
 
