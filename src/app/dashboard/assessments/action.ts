@@ -2,9 +2,10 @@
 
 import { validateRequest } from '@/server/auth/validateRequest'
 import { client } from '@/server/db/client'
+import dayjs from 'dayjs'
 
 export const createAssessment = async (
-    data: Omit<assessment.Assessment, 'userId'>
+    data: Omit<assessment.Assessment, 'userId'> & { time: string }
 ): Promise<void | { error: string }> => {
     const { user } = await validateRequest()
 
@@ -15,6 +16,7 @@ export const createAssessment = async (
             data: {
                 ...data,
                 userId: user.id,
+                date: dayjs(`${data.date} ${data.time}`).toISOString(),
             },
         })
     } catch {
