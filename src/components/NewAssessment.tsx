@@ -2,9 +2,11 @@
 
 import { FC, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { createAssessment } from '@/app/dashboard/assessments/action'
+import { resIsError } from '@/utils/resIsError'
 import {
     Form,
     FormControl,
@@ -24,17 +26,25 @@ const formSchema = z.object({
         .string()
         .min(3, { message: 'Name must be at least 3 characters' })
         .max(48, { message: 'Name can be max 48 characters' }),
-    weight: z
-        .number()
-        .min(0, { message: 'Weight must be at least 0' })
-        .max(100, { message: 'Weight can be max 100' }),
+    weight: z.string().refine(
+        value => {
+            const val = parseInt(value, 10)
+            return val >= 0 && val <= 100
+        },
+        { message: 'Weight must be between 0 and 100' }
+    ),
     date: z.string(),
     time: z.string(),
     moduleId: z.string(),
     grade: z
-        .number()
-        .min(0, { message: 'Grade must be at least 0' })
-        .max(100, { message: 'Grade can be max 100' })
+        .string()
+        .refine(
+            value => {
+                const val = parseInt(value, 10)
+                return val >= 0 && val <= 100
+            },
+            { message: 'Grade must be between 0 and 100' }
+        )
         .optional(),
 })
 
@@ -44,21 +54,24 @@ export const NewAssessment: FC = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
     })
+    const router = useRouter()
 
     const onSubmit = form.handleSubmit(data => {
         startTransition(async () => {
             const res = await createAssessment({
                 ...data,
-                date: new Date(data.date),
                 grade: data.grade ?? null,
             })
 
-            if (res) {
+            if (resIsError(res)) {
                 form.setError('root', {
                     type: 'manual',
                     message: res.error,
                 })
-            } else disable()
+            } else {
+                router.refresh()
+                disable()
+            }
         })
     })
 
@@ -116,7 +129,6 @@ export const NewAssessment: FC = () => {
                                             <Input
                                                 className="input"
                                                 {...field}
-                                                placeholder="Date"
                                                 type="date"
                                             />
                                         </FormControl>
