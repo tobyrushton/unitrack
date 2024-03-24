@@ -17,6 +17,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent } from './ui/select'
 import { Input } from './ui/input'
 import { PopUp, PopUpFormButtons, usePopUp } from './PopUp'
 import { CardHeader, CardTitle, CardContent } from './ui/card'
+import { SelectListModules } from './SelectList'
 
 const formSchema = z.object({
     name: z.string(),
@@ -137,12 +138,15 @@ export const NewAssessment: FC = () => {
                                 <FormItem>
                                     <FormLabel>Module</FormLabel>
                                     <FormControl>
-                                        <Select {...field}>
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                        >
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select a module" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {/* TODO: IMPLEMENT MODULE FETCH */}
+                                                <SelectListModules />
                                             </SelectContent>
                                         </Select>
                                     </FormControl>

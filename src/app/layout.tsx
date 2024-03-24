@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { FC, ReactNode } from 'react'
 import { GeistSans } from 'geist/font/sans'
+import { TRPCProvider } from '@/components/providers/trpc'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -11,7 +12,9 @@ export const metadata: Metadata = {
 const RootLayout: FC<{ children: ReactNode }> = ({ children }) => {
     return (
         <html lang="en-gb">
-            <body className={GeistSans.className}>{children}</body>
+            <body className={GeistSans.className}>
+                <TRPCProvider>{children}</TRPCProvider>
+            </body>
         </html>
     )
 }
