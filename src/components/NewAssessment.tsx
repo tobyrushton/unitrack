@@ -2,10 +2,12 @@
 
 import { FC, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/navigation'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { createAssessment } from '@/app/dashboard/assessments/action'
+import {
+    createAssessment,
+    updateAssessment,
+} from '@/app/dashboard/assessments/action'
 import { resIsError } from '@/utils/resIsError'
 import {
     Form,
@@ -20,6 +22,10 @@ import { Input } from './ui/input'
 import { PopUp, PopUpFormButtons, usePopUp } from './PopUp'
 import { CardHeader, CardTitle, CardContent } from './ui/card'
 import { SelectListModules } from './SelectList'
+
+interface NewAssessmentProps {
+    assessment?: Omit<assessment.AssessmentId, 'userId'>
+}
 
 const formSchema = z.object({
     name: z
@@ -48,29 +54,50 @@ const formSchema = z.object({
         .optional(),
 })
 
-export const NewAssessment: FC = () => {
+export const NewAssessment: FC<NewAssessmentProps> = ({ assessment }) => {
     const [isPending, startTransition] = useTransition()
     const { disable } = usePopUp()
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
+        defaultValues: {
+            name: assessment?.name ?? '',
+            weight: assessment?.weight.toString() ?? '',
+            date: assessment?.date.toISOString().split('T')[0] ?? '',
+            time:
+                assessment?.date.toISOString().split('T')[1].split('.')[0] ??
+                '',
+            moduleId: assessment?.moduleId ?? undefined,
+            grade: assessment?.grade?.toString() ?? undefined,
+        },
     })
-    const router = useRouter()
 
     const onSubmit = form.handleSubmit(data => {
         startTransition(async () => {
-            const res = await createAssessment({
-                ...data,
-                grade: data.grade ?? null,
-            })
-
-            if (resIsError(res)) {
-                form.setError('root', {
-                    type: 'manual',
-                    message: res.error,
+            if (assessment) {
+                const res = await updateAssessment({
+                    ...data,
+                    id: assessment.id,
+                    grade: data.grade ?? null,
                 })
+
+                if (res)
+                    form.setError('root', {
+                        type: 'manual',
+                        message: res.error,
+                    })
+                else disable()
             } else {
-                router.refresh()
-                disable()
+                const res = await createAssessment({
+                    ...data,
+                    grade: data.grade ?? null,
+                })
+
+                if (resIsError(res)) {
+                    form.setError('root', {
+                        type: 'manual',
+                        message: res.error,
+                    })
+                } else disable()
             }
         })
     })
@@ -78,7 +105,7 @@ export const NewAssessment: FC = () => {
     return (
         <PopUp>
             <CardHeader>
-                <CardTitle>New Assessment</CardTitle>
+                <CardTitle>{assessment ? 'Edit' : 'New'} Assessment</CardTitle>
             </CardHeader>
             <CardContent>
                 <Form {...form}>
